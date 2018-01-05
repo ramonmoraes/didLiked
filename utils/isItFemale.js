@@ -25,5 +25,4 @@ const isFemale = (name) => {
     });
     return true
   }
-
 }

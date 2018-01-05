@@ -4,11 +4,15 @@ const jsdom = require('jsdom');
 const fs = require('fs');
 const {JSDOM} = jsdom;
 
-const URL = 'http://nomesportugueses.blogspot.com.br/2009/04/nomes-femininos-de-a-z.html';
+const URL_FEMALE = 'http://nomesportugueses.blogspot.com.br/2009/04/nomes-femininos-de-a-z.html';
+const PATH_FEMALE = './utils/femaleNames.txt';
+
+const URL_MALE = 'http://nomesportugueses.blogspot.com.br/2009/04/nomes-masculinos-de-a-z.html';
+const PATH_MALE = './utils/maleNames.txt';
 
 class Crawler {
-  constructor(url,query) {
-    this.query=query || '/w';
+  constructor(url,filePath) {
+    this.filePath = filePath;
     this.fetchPage(url)
     .then(htmlPage => this.transformInJSDOM(htmlPage));
   }
@@ -46,7 +50,7 @@ class Crawler {
   }
   cleanUpList (listOfNames) {
     const newList = listOfNames.map((name) => {
-      name = name.replace(/&nbsp/,'');
+      name = name.replace(/&nbsp/,' ');
       name = name.replace(/;/,'');
       return name;
     });
@@ -57,12 +61,12 @@ class Crawler {
     return newList;
   }
   writeListOfNames (listOfNames) {
-    console.log(listOfNames);
-    fs.writeFile('./utils/pageFile.txt',listOfNames,(err) => {
+    fs.writeFile(this.filePath,listOfNames,(err) => {
       if(err)
         throw err;
       console.log('file has been saved');
     });
   }
 }
-new Crawler(URL);
+new Crawler(URL_FEMALE,PATH_FEMALE);
+new Crawler(URL_MALE,PATH_MALE);
